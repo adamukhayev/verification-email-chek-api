@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: ""
+    username: ""
+    password: ""
+    initialization-mode: never
+
+email-code-check-api:
+  email: abc@gmail.com
+  password: pass123

@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: Email Code Check API
+  datasource:
+    url: "jdbc:postgresql://localhost:25432/email_code_check_db?currentSchema=email_code_check"
+    username: "email_code_check_username"
+    password: "1"
+    initialization-mode: never
+    driver-class-name: org.postgresql.Driver
+
+server:
+  servlet:
+    context-path: /email-code-check-api
+
+email-code-check-api:
+  email: abc@gmail.com
+  password: pass123

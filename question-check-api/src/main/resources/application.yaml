@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Question Check API
+  datasource:
+    url: "jdbc:postgresql://localhost:25432/question_check_db?currentSchema=question_check"
+    username: "question_check_user"
+    password: "1"
+    initialization-mode: never
+    driver-class-name: org.postgresql.Driver
+
+server:
+  servlet:
+    context-path: /question-check-api
+
+
+

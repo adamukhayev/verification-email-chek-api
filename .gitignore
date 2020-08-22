@@ -1,0 +1,18 @@
+.gradle
+build/
+bin/
+!gradle/wrapper/gradle-wrapper.jar
+.DS_Store
+classes/
+lombok.config
+.gradletasknamecache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### Logs ###
+log/

@@ -1,0 +1,3 @@
+rootProject.name = 'verification-services'
+
+include 'question-check-api', 'email-code-check-api', 'shared-model', 'security-config'

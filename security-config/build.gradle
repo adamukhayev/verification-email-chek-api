@@ -1,0 +1,9 @@
+plugins {
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java-library'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.3.0.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.3.0.RELEASE'
+}

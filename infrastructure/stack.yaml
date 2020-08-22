@@ -1,0 +1,135 @@
+version: '3.5'
+
+networks:
+  traefik:
+    name: traefik
+    driver: overlay
+
+services:
+  traefik:
+    image: traefik:1.7
+    command: --defaultEntryPoints='http' \
+      --entryPoints='Name:http Address::80' \
+      --logLevel='INFO' \
+      --accessLog \
+      --api \
+      --constraints=tag==traefik-public \
+      --docker \
+      --docker.swarmmode \
+      --docker.exposedbydefault=false \
+      --retry
+    ports:
+      - "80:80"
+    networks:
+      - traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      labels:
+        - "traefik.frontend.rule=Host:ec2-34-209-171-172.us-west-2.compute.amazonaws.com; PathPrefixStrip:/traefik;"
+        - "traefik.backend=traefik"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+        - "traefik.tags=traefik-public"
+        - "traefik.docker.network=traefik"
+      restart_policy:
+        condition: on-failure
+        delay: 25s
+        max_attempts: 30
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  visualizer:
+    image: dockersamples/visualizer
+    networks:
+      - traefik
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      CTX_ROOT: /visualizer
+    deploy:
+      labels:
+        - "traefik.frontend.rule=Host:ec2-34-209-171-172.us-west-2.compute.amazonaws.com; PathPrefix:/visualizer;"
+        - "traefik.backend=visualizer"
+        - "traefik.enable=true"
+        - "traefik.port=8080"
+        - "traefik.tags=traefik-public"
+        - "traefik.docker.network=traefik"
+      restart_policy:
+        condition: on-failure
+        delay: 25s
+        max_attempts: 30
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  email-code-check-api:
+    image: registry.gitlab.com/xyz/email-code-check-api:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+      JAVA_OPTS: '-Xms1G -Xmx1G'
+    networks:
+      - traefik
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+      restart_policy:
+        condition: on-failure
+        delay: 25s
+        max_attempts: 50
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      # don't remove this line
+      labels:
+        - "traefik.frontend.rule=Host:ec2-34-209-171-172.us-west-2.compute.amazonaws.com; PathPrefix:/email-code-check-api;"
+        - "traefik.port=8080"
+        - "traefik.enable=true"
+        - "traefik.tags=traefik-public"
+        - "traefik.docker.network=traefik"
+        - "traefik.frontend.passHostHeader=true"
+        - "traefik.backend=email-api"
+        - "traefik.backend.healthcheck.path=/email-api/actuator/health"
+        - "traefik.backend.healthcheck.port=8080"
+        - "traefik.backend.healthcheck.interval=40s"
+        - "traefik.backend.maxconn.amount=50"
+        - "traefik.backend.maxconn.extractorfunc=client.ip"
+
+  question-check-api:
+    image: registry.gitlab.com/xyz/question-check-api:latest
+    environment:
+      SPRING_PROFILES_ACTIVE: "prod"
+      JAVA_OPTS: '-Xms1G -Xmx1G'
+    networks:
+      - traefik
+    deploy:
+      resources:
+        limits:
+          memory: 2048M
+      restart_policy:
+        condition: on-failure
+        delay: 25s
+        max_attempts: 50
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      # don't remove this line
+      labels:
+        - "traefik.frontend.rule=Host:ec2-34-209-171-172.us-west-2.compute.amazonaws.com; PathPrefix:/question-check-api;"
+        - "traefik.port=8080"
+        - "traefik.enable=true"
+        - "traefik.tags=traefik-public"
+        - "traefik.docker.network=traefik"
+        - "traefik.frontend.passHostHeader=true"
+        - "traefik.backend=email-api"
+        - "traefik.backend.healthcheck.path=/email-api/actuator/health"
+        - "traefik.backend.healthcheck.port=8080"
+        - "traefik.backend.healthcheck.interval=40s"
+        - "traefik.backend.maxconn.amount=50"
+        - "traefik.backend.maxconn.extractorfunc=client.ip"

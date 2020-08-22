@@ -1,0 +1,56 @@
+image: gradle:6.4.1-jdk11
+
+variables:
+  DOCKER_DRIVER: overlay2
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  CI_SHORT_COMMIT_SHA: '$${CI_COMMIT_SHA:0:8}'
+  IMAGE_NAME: "$CI_REGISTRY/$CI_PROJECT_PATH"
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - export BUILD_DATE=`date +%Y%m%d-%H%M%S`
+  - eval export CI_SHORT_COMMIT_SHA=${CI_SHORT_COMMIT_SHA}
+  - eval export RELEASE_IMAGE_TAG=$BUILD_DATE.$CI_SHORT_COMMIT_SHA
+
+stages:
+  - build
+  - release
+
+build_app:
+  stage: build
+  script: gradle --build-cache assemble
+  artifacts:
+    paths:
+      - core-api/build/libs
+      - email-api/build/libs
+    expire_in: 1 hour
+  cache:
+    key: "$CI_PROJECT_NAME"
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
+
+build_master:
+  image: docker:latest
+  services:
+    - docker:dind
+  stage: release
+  dependencies:
+    - build_app
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    # core-api
+    - docker build --pull -t $IMAGE_NAME/core-api core-api/.
+    - docker tag $IMAGE_NAME/core-api $IMAGE_NAME/core-api:$RELEASE_IMAGE_TAG
+    - docker tag $IMAGE_NAME/core-api $IMAGE_NAME/core-api:latest
+    - docker push $IMAGE_NAME/core-api:$RELEASE_IMAGE_TAG
+    - docker push $IMAGE_NAME/core-api:latest
+    # email-api
+    - docker build --pull -t $IMAGE_NAME/email-api email-api/.
+    - docker tag $IMAGE_NAME/email-api $IMAGE_NAME/email-api:$RELEASE_IMAGE_TAG
+    - docker tag $IMAGE_NAME/email-api $IMAGE_NAME/email-api:latest
+    - docker push $IMAGE_NAME/email-api:$RELEASE_IMAGE_TAG
+    - docker push $IMAGE_NAME/email-api:latest
+
+  only:
+    - master

@@ -21,8 +21,8 @@ build_app:
   script: gradle --build-cache assemble
   artifacts:
     paths:
-      - core-api/build/libs
-      - email-api/build/libs
+      - email-code-check-api/build/libs
+      - question-check-api/build/libs
     expire_in: 1 hour
   cache:
     key: "$CI_PROJECT_NAME"
@@ -39,18 +39,18 @@ build_master:
     - build_app
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
-    # core-api
-    - docker build --pull -t $IMAGE_NAME/core-api core-api/.
-    - docker tag $IMAGE_NAME/core-api $IMAGE_NAME/core-api:$RELEASE_IMAGE_TAG
-    - docker tag $IMAGE_NAME/core-api $IMAGE_NAME/core-api:latest
-    - docker push $IMAGE_NAME/core-api:$RELEASE_IMAGE_TAG
-    - docker push $IMAGE_NAME/core-api:latest
-    # email-api
-    - docker build --pull -t $IMAGE_NAME/email-api email-api/.
-    - docker tag $IMAGE_NAME/email-api $IMAGE_NAME/email-api:$RELEASE_IMAGE_TAG
-    - docker tag $IMAGE_NAME/email-api $IMAGE_NAME/email-api:latest
-    - docker push $IMAGE_NAME/email-api:$RELEASE_IMAGE_TAG
-    - docker push $IMAGE_NAME/email-api:latest
+    # email-code-check-api
+    - docker build --pull -t $IMAGE_NAME/email-code-check-api email-code-check-api/.
+    - docker tag $IMAGE_NAME/email-code-check-api $IMAGE_NAME/email-code-check-api:$RELEASE_IMAGE_TAG
+    - docker tag $IMAGE_NAME/email-code-check-api $IMAGE_NAME/email-code-check-api:latest
+    - docker push $IMAGE_NAME/email-code-check-api:$RELEASE_IMAGE_TAG
+    - docker push $IMAGE_NAME/email-code-check-api:latest
+    # question-check-api
+    - docker build --pull -t $IMAGE_NAME/question-check-api question-check-api/.
+    - docker tag $IMAGE_NAME/question-check-api $IMAGE_NAME/question-check-api:$RELEASE_IMAGE_TAG
+    - docker tag $IMAGE_NAME/question-check-api $IMAGE_NAME/question-check-api:latest
+    - docker push $IMAGE_NAME/question-check-api:$RELEASE_IMAGE_TAG
+    - docker push $IMAGE_NAME/question-check-api:latest
 
   only:
     - master

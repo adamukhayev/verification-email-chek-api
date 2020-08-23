@@ -2,15 +2,15 @@ spring:
   application:
     name: Question Check API
   datasource:
-    url: "jdbc:postgresql://localhost:25432/question_check_db?currentSchema=question_check"
-    username: "question_check_user"
-    password: "1"
-    initialization-mode: never
+    url: "jdbc:postgresql://localhost:25432/my_store_db?currentSchema=public"
+    username: "my_store"
+    password: "123"
     driver-class-name: org.postgresql.Driver
 
 server:
   servlet:
-    context-path: /question-check-api
+    context-path: /api
+  port: 8081
 
 
 

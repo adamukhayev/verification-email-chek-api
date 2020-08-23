@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"com.pivitengineering.store.model.entity"})
+@EntityScan(basePackages = {"com.m46.codechecks.model.entity"})
 public class EmailApiApplication {
 
 	public static void main(String[] args) {

@@ -2,14 +2,14 @@ version: '3'
 volumes:
   pgdata:
 services:
-  pivit-store-db:
+  my-store-db:
     build: ./db
-    container_name: pivit-store-db
+    container_name: my-store-db
     command: -c 'listen_addresses="*"'
     environment:
-      - POSTGRES_USER=pivit_store
-      - POSTGRES_PASSWORD=9d2c3fnCsXeU
-      - POSTGRES_DB=pivit_store_db
+      - POSTGRES_USER=my_store
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=my_store_db
     restart: on-failure
     ports:
       - 25432:5432

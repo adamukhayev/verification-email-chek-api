@@ -5,8 +5,8 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
   CI_SHORT_COMMIT_SHA: '$${CI_COMMIT_SHA:0:8}'
   IMAGE_NAME: "$CI_REGISTRY/$CI_PROJECT_PATH"
-  IMAGE_NAME_API_EMAIL_MASTER: "$CI_REGISTRY/$CI_PROJECT_PATH/master/email-code-check-api"
-  IMAGE_NAME_API_QUESTION_MASTER: "$CI_REGISTRY/$CI_PROJECT_PATH/master/question-check-api"
+  IMAGE_NAME_API_EMAIL_MASTER: "registry.gitlab.com/sulumbek/verification/master/email-code-check-api"
+  IMAGE_NAME_API_QUESTION_MASTER: "registry.gitlab.com/sulumbek/verification/master/question-check-api"
 
 before_script:
   - export GRADLE_USER_HOME=`pwd`/.gradle

@@ -33,6 +33,7 @@ public class EmailVerificationService {
     ) {
 
         var verificationCode = generateCode();
+
         var verificationRequest = verificationRepository.findByEmail(email);
 
         if (verificationRequest == null) {

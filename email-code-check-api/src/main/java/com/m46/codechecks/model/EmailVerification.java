@@ -1,5 +1,6 @@
 package com.m46.codechecks.model;
 
+import javax.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

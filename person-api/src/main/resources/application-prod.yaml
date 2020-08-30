@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: "jdbc:postgresql://question_check_db_host:5432/question_check_db?currentSchema=question_check"
+    username: "question_check_user"
+    password: "1"
+    initialization-mode: never

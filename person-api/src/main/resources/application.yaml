@@ -10,7 +10,11 @@ spring:
 server:
   servlet:
     context-path: /api
-  port: 8081
+  port: 8080
+
+  person-api:
+    email: abc@gmail.com
+    password: pass123
 
 
 
